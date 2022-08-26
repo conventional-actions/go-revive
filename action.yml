@@ -1,0 +1,37 @@
+name: 'go-revive'
+description: 'Run go-revive'
+author: 'Conventional Actions'
+inputs:
+  version:
+    required: false
+    description: 'version of revive to use'
+    default: latest
+  config_path:
+    required: false
+    description: 'path to config file in TOML format'
+    default: './revive.toml'
+  exclude_path:
+    required: false
+    description: 'paths to exclude'
+  format:
+    required: false
+    description: 'formatter to be used for the output'
+    default: sarif
+  output_path:
+    required: false
+    description: 'output file path'
+    default: gorevive.sarif
+  package:
+    required: false
+    description: 'package to scan'
+    default: ./...
+outputs:
+  output_path:
+    description: 'output file path'
+runs:
+  using: 'node16'
+  pre: 'dist/setup/index.js'
+  main: 'dist/main/index.js'
+branding:
+  icon: shopping-cart
+  color: purple
