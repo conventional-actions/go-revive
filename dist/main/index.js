@@ -7304,7 +7304,13 @@ async function run() {
         const packages = (0, utils_1.parseInputFiles)(core.getInput('package') || './...');
         const excludePaths = (0, utils_1.parseInputFiles)(core.getInput('exclude_path') || '');
         const format = core.getInput('format') || 'sarif';
-        let args = ['-config', configPath, '-format', format, '-set_exit_status'];
+        let args = [
+            '-config',
+            configPath,
+            '-formatter',
+            format,
+            '-set_exit_status'
+        ];
         for (const excludePath of excludePaths) {
             args = args.concat('-exclude', excludePath);
         }
