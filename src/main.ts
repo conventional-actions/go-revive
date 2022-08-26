@@ -53,15 +53,17 @@ warningCode = 0
       '-config',
       configPath,
       '-formatter',
-      format,
-      '-set_exit_status'
+      format
+      // '-set_exit_status'
     ]
     for (const excludePath of excludePaths) {
       args = args.concat('-exclude', excludePath)
     }
 
     for (const pkg of packages) {
-      const output = await exec.getExecOutput('revive', args.concat(pkg))
+      const output = await exec.getExecOutput('revive', args.concat(pkg), {
+        silent: true
+      })
       fs.writeFileSync(outputPath, output.stdout)
       core.setOutput('output_path', outputPath)
     }
