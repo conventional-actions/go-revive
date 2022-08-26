@@ -7304,6 +7304,40 @@ async function run() {
         const packages = (0, utils_1.parseInputFiles)(core.getInput('package') || './...');
         const excludePaths = (0, utils_1.parseInputFiles)(core.getInput('exclude_path') || '');
         const format = core.getInput('format') || 'sarif';
+        if (!fs.existsSync(configPath)) {
+            fs.writeFileSync(configPath, `
+ignoreGeneratedHeader = false
+severity = "warning"
+confidence = 0.8
+errorCode = 0
+warningCode = 0
+
+[rule.blank-imports]
+[rule.context-as-argument]
+[rule.context-keys-type]
+[rule.dot-imports]
+[rule.error-return]
+[rule.error-strings]
+[rule.error-naming]
+[rule.exported]
+[rule.if-return]
+[rule.increment-decrement]
+[rule.var-naming]
+[rule.var-declaration]
+[rule.package-comments]
+[rule.range]
+[rule.receiver-naming]
+[rule.time-naming]
+[rule.unexported-return]
+[rule.indent-error-flow]
+[rule.errorf]
+[rule.empty-block]
+[rule.superfluous-else]
+[rule.unused-parameter]
+[rule.unreachable-code]
+[rule.redefines-builtin-id]
+`);
+        }
         let args = [
             '-config',
             configPath,
