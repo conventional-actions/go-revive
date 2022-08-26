@@ -14,7 +14,7 @@ async function run(): Promise<void> {
     let args: string[] = [
       '-config',
       configPath,
-      '-format',
+      '-formatter',
       format,
       '-set_exit_status'
     ]
