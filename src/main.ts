@@ -1,19 +1,15 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {parseInputFiles} from './utils'
 import * as fs from 'fs'
+import {getConfig} from './config'
 
 async function run(): Promise<void> {
   try {
-    const configPath = core.getInput('config_path') || './revive.toml'
-    const outputPath = core.getInput('output_path') || 'gorevive.sarif'
-    const packages = parseInputFiles(core.getInput('package') || './...')
-    const excludePaths = parseInputFiles(core.getInput('exclude_path') || '')
-    const format = core.getInput('format') || 'sarif'
+    const config = await getConfig()
 
-    if (!fs.existsSync(configPath)) {
+    if (!fs.existsSync(config.configPath)) {
       fs.writeFileSync(
-        configPath,
+        config.configPath,
         `
 ignoreGeneratedHeader = false
 severity = "warning"
@@ -51,21 +47,21 @@ warningCode = 0
 
     let args: string[] = [
       '-config',
-      configPath,
+      config.configPath,
       '-formatter',
-      format
+      config.format
       // '-set_exit_status'
     ]
-    for (const excludePath of excludePaths) {
+    for (const excludePath of config.excludePaths) {
       args = args.concat('-exclude', excludePath)
     }
 
-    for (const pkg of packages) {
+    for (const pkg of config.packages) {
       const output = await exec.getExecOutput('revive', args.concat(pkg), {
         silent: true
       })
-      fs.writeFileSync(outputPath, output.stdout)
-      core.setOutput('output_path', outputPath)
+      fs.writeFileSync(config.outputPath, output.stdout)
+      core.setOutput('output_path', config.outputPath)
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
